@@ -5,31 +5,99 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Calendar.Scripts"
         mc:Ignorable="d"
-        Title="MainWindow" Height="500" Width="850">
+        Title="MainWindow" Height="600" Width="900">
+
+    <Window.Resources>
+        <local:BoolToHighlightBrushConverter x:Key="BoolToHighlightBrushConverter"/>
+    </Window.Resources>
+
     <Window.DataContext>
         <local:MainViewModel/>
     </Window.DataContext>
-    <Grid Margin="10">
+   
+    <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*" />
-            <ColumnDefinition Width="3*" />
+            <ColumnDefinition Width="3*"/>
+            <!-- Calendar column -->
+            <ColumnDefinition Width="2*"/>
+            <!-- Details column -->
         </Grid.ColumnDefinitions>
-        <Calendar Grid.Column="0" SelectedDate="{Binding SelectedDate}" Margin="0,0,10,0" />
 
-        <StackPanel Grid.Column="1">
-            <TextBlock Text="Fotbalové události:" FontWeight="Bold" Margin="0,0,0,10" />
+        <!-- Left: Calendar View -->
+        <DockPanel Grid.Column="0">
+            <!-- Title -->
+            <TextBlock Text="{Binding SelectedDate, StringFormat='MMMM yyyy'}"
+                       FontSize="24" FontWeight="Bold"
+                       Margin="10"
+                       DockPanel.Dock="Top" />
 
-            <ListView ItemsSource="{Binding Events}" Height="300">
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn Header="Datum" DisplayMemberBinding="{Binding Date}" Width="100"/>
-                        <GridViewColumn Header="Název" DisplayMemberBinding="{Binding Title}" Width="200"/>
-                        <GridViewColumn Header="Typ" DisplayMemberBinding="{Binding Tag}" Width="100"/>
-                    </GridView>
-                </ListView.View>
-            </ListView>
+            <!-- Calendar Grid -->
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <ItemsControl ItemsSource="{Binding Days}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Columns="7"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border BorderBrush="LightGray" BorderThickness="1" Padding="4" Margin="2" MinHeight="80"
+                                    Background="{Binding IsSelected, Converter={StaticResource BoolToHighlightBrushConverter}}">
+                                <Button Content="{Binding Date.Day}"
+                                        Command="{Binding DataContext.ChangeSelectedDateCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                        CommandParameter="{Binding Date}"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        HorizontalAlignment="Stretch"
+                                        VerticalAlignment="Stretch">
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="Button">
+                                            <Grid Background="Transparent">
+                                                <!-- Tento Grid bude obsahovat číslo dne a události -->
+                                                <StackPanel>
+                                                    <TextBlock Text="{Binding Date.Day}" FontWeight="Bold" HorizontalAlignment="Center" />
+                                                    <ItemsControl ItemsSource="{Binding Events}">
+                                                        <ItemsControl.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <TextBlock Text="{Binding Title}" FontSize="10" TextWrapping="Wrap"/>
+                                                            </DataTemplate>
+                                                        </ItemsControl.ItemTemplate>
+                                                    </ItemsControl>
+                                                </StackPanel>
+                                            </Grid>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </DockPanel>
 
-            <Button Content="Přidat zápas" Command="{Binding AddEventCommand}" Width="150" HorizontalAlignment="Right" Margin="0,10,0,0" />
+        <!-- Right: Event Details Panel -->
+        <StackPanel Grid.Column="1" Margin="10">
+            <TextBlock Text="Events on this day:" FontSize="18" FontWeight="Bold" Margin="0 0 0 10"/>
+
+            <ItemsControl ItemsSource="{Binding SelectedDay.Events}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border BorderBrush="Gray" BorderThickness="1" Padding="5" Margin="5">
+                            <StackPanel>
+                                <TextBlock Text="{Binding Title}" FontWeight="Bold"/>
+                                <TextBlock Text="{Binding Time}" FontStyle="Italic"/>
+                                <TextBlock Text="{Binding Tag}"/>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <!-- Add Event Button -->
+            <Button Content="Add Event"
+                    Command="{Binding AddEventCommand}"
+                    Margin="0 10 0 0"
+                    Padding="5"/>
         </StackPanel>
     </Grid>
 </Window>

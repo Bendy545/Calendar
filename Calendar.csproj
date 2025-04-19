@@ -74,6 +74,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Scripts\BoolToHighlightBrushConverter.cs" />
+    <Compile Include="Scripts\DayViewModel.cs" />
     <Compile Include="Scripts\EventRepository.cs" />
     <Compile Include="Scripts\FootballEvent.cs" />
     <Compile Include="Scripts\MainViewModel.cs" />

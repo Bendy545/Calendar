@@ -1,24 +1,58 @@
 ﻿using Calendar.Scripts;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Calendar.Scripts
 {
     public class MainViewModel : INotifyPropertyChanged
     {
+        public List<string> TagFilters { get; } = new List<string> { "All", "Match", "Training" };
+
         private readonly IEventRepository _repository;
 
         public ObservableCollection<DayViewModel> Days { get; set; }
-        public ICommand AddEventCommand { get; set; }
+        private ObservableCollection<FootballEvent> _allEvents = new ObservableCollection<FootballEvent>();
+        public ObservableCollection<FootballEvent> FilteredEvents { get; set; }
 
         private DateTime _selectedDate = DateTime.Today;
-        public ICommand ChangeSelectedDateCommand { get; set; }
 
         private DayViewModel _selectedDay;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        private string _selectedTagFilter = "All";
+
+        public ICommand ChangeSelectedDateCommand { get; set; }
+        public ICommand AddEventCommand { get; set; }
+        public ICommand PreviousMonthCommand { get; set; }
+        public ICommand NextMonthCommand { get; set; }
+        public ICommand ModifyEventCommand { get; set; }
+        public ICommand DeleteEventCommand { get; set; }
+
+        protected void OnPropertyChanged([CallerMemberName] string name = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
+        public string SelectedTagFilter
+        {
+            get { return _selectedTagFilter; }
+            set
+            {
+                if (_selectedTagFilter != value)
+                {
+                    _selectedTagFilter = value;
+                    OnPropertyChanged(nameof(SelectedTagFilter));
+                    GenerateMonthDays();
+                }
+            }
+        }
+
         public DayViewModel SelectedDay
         {
             get => _selectedDay;
@@ -46,8 +80,38 @@ namespace Calendar.Scripts
             AddEventCommand = new RelayCommand(AddEvent);
             ChangeSelectedDateCommand = new RelayCommand(param => ChangeSelectedDate((DateTime)param)); 
             GenerateMonthDays();
+            PreviousMonthCommand = new RelayCommand(() => SelectedDate = SelectedDate.AddMonths(-1));
+            NextMonthCommand = new RelayCommand(() => SelectedDate = SelectedDate.AddMonths(1));
+            ModifyEventCommand = new RelayCommand(ModifyEvent);
+            DeleteEventCommand = new RelayCommand(DeleteEvent);
         }
 
+        private void ModifyEvent(object parameter)
+        {
+            var eventToModify = parameter as FootballEvent;
+            if (eventToModify != null)
+            {
+                
+                var editWindow = new AddEventWindow(eventToModify); 
+                var result = editWindow.ShowDialog();
+
+                if (result == true && editWindow.ResultEvent != null)
+                {
+                    _repository.UpdateEvent(editWindow.ResultEvent);
+                    GenerateMonthDays();
+                }
+            }
+        }
+
+        private void DeleteEvent(object parameter)
+        {
+            var eventToDelete = parameter as FootballEvent;
+            if (eventToDelete != null)
+            {
+                _repository.DeleteEvent(eventToDelete);
+                GenerateMonthDays();
+            }
+        }
         private void ChangeSelectedDate(DateTime date)
         {
             SelectedDate = date;
@@ -62,51 +126,65 @@ namespace Calendar.Scripts
         private void GenerateMonthDays()
         {
             Days.Clear();
-            var firstDay = new DateTime(SelectedDate.Year, SelectedDate.Month, 1);
-            var startDate = firstDay.AddDays(-(int)firstDay.DayOfWeek);
+    var firstDay = new DateTime(SelectedDate.Year, SelectedDate.Month, 1);
+    var daysInMonth = DateTime.DaysInMonth(SelectedDate.Year, SelectedDate.Month);
 
-            for (int i = 0; i < 42; i++)
-            {
-                var date = startDate.AddDays(i);
-                var day = new DayViewModel(date)
-                {
-                    IsCurrentMonth = date.Month == SelectedDate.Month
-                };
+    for (int day = 1; day <= daysInMonth; day++)
+    {
+        var date = new DateTime(SelectedDate.Year, SelectedDate.Month, day);
+        var dayViewModel = new DayViewModel(date)
+        {
+            IsCurrentMonth = true
+        };
 
-                foreach (var ev in _repository.GetEvents(date))
-                {
-                    day.Events.Add(ev);
-                }
+        var dayEvents = _repository.GetEvents(date);
+        
+        if (SelectedTagFilter != "All")
+        {
+            dayEvents = dayEvents.Where(e => 
+                e.Tag.Equals(SelectedTagFilter, StringComparison.OrdinalIgnoreCase)).ToList();
+        }
 
-                Days.Add(day);
+        foreach (var ev in dayEvents)
+        {
+            dayViewModel.Events.Add(ev);
+        }
 
-                if (date.Date == SelectedDate.Date)
-                    SelectedDay = day;
-            }
+        Days.Add(dayViewModel);
+
+        if (date.Date == SelectedDate.Date)
+            SelectedDay = dayViewModel;
+    }
+
+    foreach (var day in Days)
+    {
+        day.IsSelected = day.Date.Date == SelectedDate.Date;
+    }
         }
 
         private void AddEvent()
         {
-            var newEvent = new FootballEvent
+            var window = new AddEventWindow();
+            if (window.ShowDialog() == true)
             {
-                Date = SelectedDate,
-                Time = new TimeSpan(15, 0, 0),
-                Title = "Nový zápas",
-                Tag = "zápas"
-            };
+                if (TimeSpan.TryParse(window.TimeText, out TimeSpan parsedTime))
+                {
+                    var newEvent = new FootballEvent
+                    {
+                        Date = SelectedDate,
+                        Time = parsedTime,
+                        Title = window.TitleText,
+                        Tag = window.TagText
+                    };
 
-            _repository.AddEvent(newEvent);
-            GenerateMonthDays();
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged([CallerMemberName] string name = null)
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(name));
+                    _repository.AddEvent(newEvent);
+                    GenerateMonthDays();
+                }
+                else
+                {
+                    MessageBox.Show("Invalid time format. Use HH:mm.");
+                }
             }
         }
-
     }
 }

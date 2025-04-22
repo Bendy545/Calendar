@@ -9,6 +9,8 @@ namespace Calendar.Scripts
     {
         List<FootballEvent> GetEvents(DateTime date);
         void AddEvent(FootballEvent footballEvent);
+        void UpdateEvent(FootballEvent footballEvent);
+        void DeleteEvent(FootballEvent footballEvent);
     }
 
     public class EventRepository : IEventRepository
@@ -60,6 +62,23 @@ namespace Calendar.Scripts
             cmd.Parameters.AddWithValue("@time", footballEvent.Time.ToString());
             cmd.Parameters.AddWithValue("@title", footballEvent.Title);
             cmd.Parameters.AddWithValue("@tag", footballEvent.Tag);
+            cmd.ExecuteNonQuery();
+        }
+
+        public void UpdateEvent(FootballEvent footballEvent)
+        {
+            var cmd = new SQLiteCommand("UPDATE Events SET Time = @time, Title = @title, Tag = @tag WHERE Id = @id", _connection);
+            cmd.Parameters.AddWithValue("@id", footballEvent.Id);
+            cmd.Parameters.AddWithValue("@time", footballEvent.Time.ToString());
+            cmd.Parameters.AddWithValue("@title", footballEvent.Title);
+            cmd.Parameters.AddWithValue("@tag", footballEvent.Tag);
+            cmd.ExecuteNonQuery();
+        }
+
+        public void DeleteEvent(FootballEvent footballEvent)
+        {
+            var cmd = new SQLiteCommand("DELETE FROM Events WHERE Id = @id", _connection);
+            cmd.Parameters.AddWithValue("@id", footballEvent.Id);
             cmd.ExecuteNonQuery();
         }
     }

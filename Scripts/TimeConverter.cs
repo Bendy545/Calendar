@@ -5,19 +5,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
-using System.Windows.Media;
 
 namespace Calendar.Scripts
 {
-    public class BoolToHighlightBrushConverter : IValueConverter
+    public class TimeConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is bool isSelected && isSelected)
+            if (value is TimeSpan time)
             {
-                return new SolidColorBrush(Colors.LightBlue); 
+                return time.ToString(@"hh\:mm");
             }
-            return new SolidColorBrush(Colors.Transparent);
+
+            return value;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

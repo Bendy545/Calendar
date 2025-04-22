@@ -44,6 +44,9 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
@@ -74,12 +77,32 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AddEventWindow.xaml.cs">
+      <DependentUpon>AddEventWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Scripts\API\EspnBroadcast.cs" />
+    <Compile Include="Scripts\API\EspnCompetition.cs" />
+    <Compile Include="Scripts\API\EspnCompetitor.cs" />
+    <Compile Include="Scripts\API\EspnEvent.cs" />
+    <Compile Include="Scripts\API\EspnNflApiService.cs" />
+    <Compile Include="Scripts\API\EspnScoreboard.cs" />
+    <Compile Include="Scripts\API\EspnStatus.cs" />
+    <Compile Include="Scripts\API\EspnStatusType.cs" />
+    <Compile Include="Scripts\API\EspnTeam.cs" />
+    <Compile Include="Scripts\API\EspnVenue.cs" />
     <Compile Include="Scripts\BoolToHighlightBrushConverter.cs" />
+    <Compile Include="Scripts\BoolToVisibilityConverter.cs" />
     <Compile Include="Scripts\DayViewModel.cs" />
     <Compile Include="Scripts\EventRepository.cs" />
     <Compile Include="Scripts\FootballEvent.cs" />
     <Compile Include="Scripts\MainViewModel.cs" />
+    <Compile Include="Scripts\API\NFLGame.cs" />
     <Compile Include="Scripts\RelayCommand.cs" />
+    <Compile Include="Scripts\TimeConverter.cs" />
+    <Page Include="AddEventWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

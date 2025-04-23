@@ -12,12 +12,7 @@ namespace Calendar.Scripts
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is TimeSpan time)
-            {
-                return time.ToString(@"hh\:mm");
-            }
-
-            return value;
+            return value is TimeSpan time ? time.ToString(@"hh\:mm") : value;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

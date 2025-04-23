@@ -13,11 +13,9 @@ namespace Calendar.Scripts
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is bool isSelected && isSelected)
-            {
-                return new SolidColorBrush(Colors.LightBlue); 
-            }
-            return new SolidColorBrush(Colors.Transparent);
+            return value is bool isSelected && isSelected
+                ? new SolidColorBrush(Colors.LightBlue)
+                : new SolidColorBrush(Colors.Transparent);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

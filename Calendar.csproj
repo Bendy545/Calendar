@@ -80,25 +80,23 @@
     <Compile Include="AddEventWindow.xaml.cs">
       <DependentUpon>AddEventWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Scripts\API\EspnBroadcast.cs" />
-    <Compile Include="Scripts\API\EspnCompetition.cs" />
-    <Compile Include="Scripts\API\EspnCompetitor.cs" />
-    <Compile Include="Scripts\API\EspnEvent.cs" />
-    <Compile Include="Scripts\API\EspnNflApiService.cs" />
-    <Compile Include="Scripts\API\EspnScoreboard.cs" />
-    <Compile Include="Scripts\API\EspnStatus.cs" />
-    <Compile Include="Scripts\API\EspnStatusType.cs" />
-    <Compile Include="Scripts\API\EspnTeam.cs" />
-    <Compile Include="Scripts\API\EspnVenue.cs" />
-    <Compile Include="Scripts\BoolToHighlightBrushConverter.cs" />
-    <Compile Include="Scripts\BoolToVisibilityConverter.cs" />
+    <Compile Include="Scripts\API\MLBApiService.cs" />
+    <Compile Include="Scripts\API\MLBDate.cs" />
+    <Compile Include="Scripts\API\MLBGame.cs" />
+    <Compile Include="Scripts\API\MLBGameDetail.cs" />
+    <Compile Include="Scripts\API\MLBResponse.cs" />
+    <Compile Include="Scripts\API\MLBTeam.cs" />
+    <Compile Include="Scripts\API\MLBTeamName.cs" />
+    <Compile Include="Scripts\API\MLBTeams.cs" />
+    <Compile Include="Scripts\Convertors\BoolToHighlightBrushConverter.cs" />
+    <Compile Include="Scripts\Convertors\BoolToVisibilityConverter.cs" />
     <Compile Include="Scripts\DayViewModel.cs" />
     <Compile Include="Scripts\EventRepository.cs" />
     <Compile Include="Scripts\FootballEvent.cs" />
+    <Compile Include="Scripts\IEventRepository.cs" />
     <Compile Include="Scripts\MainViewModel.cs" />
-    <Compile Include="Scripts\API\NFLGame.cs" />
     <Compile Include="Scripts\RelayCommand.cs" />
-    <Compile Include="Scripts\TimeConverter.cs" />
+    <Compile Include="Scripts\Convertors\TimeConverter.cs" />
     <Page Include="AddEventWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Calendar.Scripts"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="900">
+        Title="MainWindow" Height="800" Width="900">
 
     <Window.Resources>
         <local:BoolToHighlightBrushConverter x:Key="BoolToHighlightBrushConverter"/>
@@ -16,112 +16,142 @@
         <local:MainViewModel/>
     </Window.DataContext>
 
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="3*"/>
-            <ColumnDefinition Width="2*"/>
-        </Grid.ColumnDefinitions>
+    <DockPanel>
 
-        <DockPanel Grid.Column="0">
+        <!-- MLB Games docked to the bottom -->
+        <ListBox DockPanel.Dock="Bottom"
+                 ItemsSource="{Binding SelectedMLBGames}"
+                 Margin="10"
+                 BorderThickness="1"
+                 BorderBrush="Gray"
+                 Height="200">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Vertical" Margin="5">
+                        <TextBlock Text="{Binding HomeTeam}" FontWeight="Bold"/>
+                        <TextBlock Text="vs"/>
+                        <TextBlock Text="{Binding AwayTeam}" FontWeight="Bold"/>
+                        <TextBlock Text="{Binding GameTime}" FontStyle="Italic" Foreground="Gray"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
 
-            <Grid DockPanel.Dock="Top" Margin="10">
+        <!-- Main Layout -->
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
 
-                <Button Grid.Column="0" Content="←" Command="{Binding PreviousMonthCommand}" Width="30" Height="30" Margin="5"/>
+            <!-- Calendar section -->
+            <ScrollViewer Grid.Row="0" Grid.Column="0" VerticalScrollBarVisibility="Auto" Margin="10">
+                <StackPanel>
 
-                <TextBlock Grid.Column="1"
-               Text="{Binding SelectedDate, StringFormat='MMMM yyyy'}"
-               FontSize="24" FontWeight="Bold"
-               HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <!-- Calendar header -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
 
-                <Button Grid.Column="2" Content="→" Command="{Binding NextMonthCommand}" Width="30" Height="30" Margin="5"/>
-            </Grid>
+                        <Button Grid.Column="0" Content="←" Command="{Binding PreviousMonthCommand}" Width="30" Height="30" Margin="5"/>
+                        <TextBlock Grid.Column="1"
+                                   Text="{Binding SelectedDate, StringFormat='MMMM yyyy'}"
+                                   FontSize="24" FontWeight="Bold"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Button Grid.Column="2" Content="→" Command="{Binding NextMonthCommand}" Width="30" Height="30" Margin="5"/>
+                    </Grid>
 
-            <StackPanel DockPanel.Dock="Top" Orientation="Vertical" Margin="10,10,0,10">
-                <TextBlock Text="Filter by type:" VerticalAlignment="Center" Margin="0,0,0,0"/>
-                <ComboBox Width="120"
-              ItemsSource="{Binding TagFilters}"
-              SelectedItem="{Binding SelectedTagFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            </StackPanel>
+                    <!-- Tag filter -->
+                    <StackPanel Orientation="Horizontal" Margin="0,10,0,10">
+                        <TextBlock Text="Filter by type:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                        <ComboBox Width="120"
+                                  ItemsSource="{Binding TagFilters}"
+                                  SelectedItem="{Binding SelectedTagFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    </StackPanel>
 
-            <ScrollViewer VerticalScrollBarVisibility="Auto">
-                <ItemsControl ItemsSource="{Binding Days}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <UniformGrid Columns="7"/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
+                    <!-- Calendar days -->
+                    <ItemsControl ItemsSource="{Binding Days}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid Columns="7"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border BorderBrush="LightGray" BorderThickness="1" Padding="4" Margin="2" MinHeight="80"
+                                        Background="{Binding IsSelected, Converter={StaticResource BoolToHighlightBrushConverter}}">
+                                    <Button Content="{Binding Date.Day}"
+                                            Command="{Binding DataContext.ChangeSelectedDateCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                            CommandParameter="{Binding Date}"
+                                            Background="Transparent"
+                                            BorderThickness="0"
+                                            HorizontalAlignment="Stretch"
+                                            VerticalAlignment="Stretch">
+                                        <Button.Template>
+                                            <ControlTemplate TargetType="Button">
+                                                <Grid Background="Transparent">
+                                                    <StackPanel>
+                                                        <TextBlock Text="{Binding Date.Day}" FontWeight="Bold" HorizontalAlignment="Center" />
+                                                        <ItemsControl ItemsSource="{Binding Events}">
+                                                            <ItemsControl.ItemTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Text="{Binding Title}" FontSize="10" TextWrapping="Wrap"/>
+                                                                </DataTemplate>
+                                                            </ItemsControl.ItemTemplate>
+                                                        </ItemsControl>
+                                                    </StackPanel>
+                                                </Grid>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- Event list -->
+            <StackPanel Grid.Row="0" Grid.Column="1" Margin="10">
+                <TextBlock Text="Events on this day:" FontSize="18" FontWeight="Bold" Margin="0 0 0 10"/>
+
+                <ItemsControl ItemsSource="{Binding SelectedDay.Events}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Border BorderBrush="LightGray" BorderThickness="1" Padding="4" Margin="2" MinHeight="80"
-                                    Background="{Binding IsSelected, Converter={StaticResource BoolToHighlightBrushConverter}}">
-                                <Button Content="{Binding Date.Day}"
-                                        Command="{Binding DataContext.ChangeSelectedDateCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                                        CommandParameter="{Binding Date}"
-                                        Background="Transparent"
-                                        BorderThickness="0"
-                                        HorizontalAlignment="Stretch"
-                                        VerticalAlignment="Stretch">
-                                    <Button.Template>
-                                        <ControlTemplate TargetType="Button">
-                                            <Grid Background="Transparent">
-                                                <StackPanel>
-                                                    <TextBlock Text="{Binding Date.Day}" FontWeight="Bold" HorizontalAlignment="Center" />
-                                                    <ItemsControl ItemsSource="{Binding Events}">
-                                                        <ItemsControl.ItemTemplate>
-                                                            <DataTemplate>
-                                                                <TextBlock Text="{Binding Title}" FontSize="10" TextWrapping="Wrap"/>
-                                                            </DataTemplate>
-                                                        </ItemsControl.ItemTemplate>
-                                                    </ItemsControl>
-                                                </StackPanel>
-                                            </Grid>
-                                        </ControlTemplate>
-                                    </Button.Template>
-                                </Button>
+                            <Border BorderBrush="Gray" BorderThickness="1" Padding="5" Margin="5">
+                                <StackPanel>
+                                    <TextBlock Text="{Binding Title}" FontWeight="Bold"/>
+                                    <TextBlock Text="{Binding Time, Converter={StaticResource TimeConverter}}" FontStyle="Italic"/>
+                                    <TextBlock Text="{Binding Tag}"/>
+
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                        <Button Content="Modify"
+                                                Command="{Binding DataContext.ModifyEventCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                CommandParameter="{Binding}" Margin="5"/>
+                                        <Button Content="Delete"
+                                                Command="{Binding DataContext.DeleteEventCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                CommandParameter="{Binding}" Margin="5"/>
+                                    </StackPanel>
+                                </StackPanel>
                             </Border>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
-            </ScrollViewer>
-        </DockPanel>
 
-        <StackPanel Grid.Column="1" Margin="10">
-            <TextBlock Text="Events on this day:" FontSize="18" FontWeight="Bold" Margin="0 0 0 10"/>
+                <Button Content="Add Event"
+                        Command="{Binding AddEventCommand}"
+                        Margin="0 10 0 0"
+                        Padding="5"/>
+            </StackPanel>
 
-            <ItemsControl ItemsSource="{Binding SelectedDay.Events}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Border BorderBrush="Gray" BorderThickness="1" Padding="5" Margin="5">
-                            <StackPanel>
-                                <TextBlock Text="{Binding Title}" FontWeight="Bold"/>
-                                <TextBlock Text="{Binding Time, Converter={StaticResource TimeConverter}}" FontStyle="Italic"/>
-                                <TextBlock Text="{Binding Tag}"/>
-
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                    <Button Content="Modify"
-                                        Command="{Binding DataContext.ModifyEventCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                                        CommandParameter="{Binding}" Margin="5"/>
-
-                                    <Button Content="Delete"
-                                        Command="{Binding DataContext.DeleteEventCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                                        CommandParameter="{Binding}" Margin="5"/>
-                                </StackPanel>
-                            </StackPanel>
-                        </Border>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-
-            <Button Content="Add Event"
-                    Command="{Binding AddEventCommand}"
-                    Margin="0 10 0 0"
-                    Padding="5"/>
-        </StackPanel>
-    </Grid>
+        </Grid>
+    </DockPanel>
 </Window>

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Calendar.Scripts"
         mc:Ignorable="d"
-        Title="MainWindow" Height="800" Width="900">
+        Title="MainWindow" Height="890" Width="950">
 
     <Window.Resources>
         <local:BoolToHighlightBrushConverter x:Key="BoolToHighlightBrushConverter"/>
@@ -20,7 +20,6 @@
 
 
         <StackPanel DockPanel.Dock="Bottom" Margin="10">
-            <!-- Added TextBlock Header for MLB Games -->
             <TextBlock Text="MLB Games on this day" FontSize="18" FontWeight="Bold" Margin="0,0,0,10"/>
 
             <ListBox ItemsSource="{Binding SelectedMLBGames}"
@@ -41,7 +40,7 @@
             </ListBox>
         </StackPanel>
 
-        <!-- Main Layout -->
+
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
@@ -52,11 +51,9 @@
                 <ColumnDefinition Width="2*"/>
             </Grid.ColumnDefinitions>
 
-            <!-- Calendar section -->
             <ScrollViewer Grid.Row="0" Grid.Column="0" VerticalScrollBarVisibility="Auto" Margin="10">
                 <StackPanel>
 
-                    <!-- Calendar header -->
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
@@ -72,16 +69,32 @@
                         <Button Grid.Column="2" Content="→" Command="{Binding NextMonthCommand}" Width="30" Height="30" Margin="5"/>
                     </Grid>
 
-                    <!-- Tag filter -->
                     <StackPanel Orientation="Horizontal" Margin="0,10,0,10">
                         <TextBlock Text="Filter by type:" VerticalAlignment="Center" Margin="0,0,10,0"/>
                         <ComboBox Width="120"
                                   ItemsSource="{Binding TagFilters}"
                                   SelectedItem="{Binding SelectedTagFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <StackPanel Orientation="Horizontal" Margin="10" VerticalAlignment="Center">
+                            <CheckBox IsChecked="{Binding NotificationsEnabled}" 
+                                    Content="Enable Notifications"
+                                    Margin="89,0,10,0"/>
+                            <Button Command="{Binding CheckNowCommand}" 
+                                    Content="Check Now" 
+                                    Padding="10,2"/>
+                        </StackPanel>
                     </StackPanel>
-
-                    <!-- Calendar days -->
-                    <ItemsControl ItemsSource="{Binding Days}">
+                    <StackPanel>
+                        <!-- Day names header -->
+                        <UniformGrid Columns="7" Margin="2,0,2,5">
+                            <TextBlock Text="Mon" HorizontalAlignment="Center" FontWeight="Bold"/>
+                            <TextBlock Text="Tue" HorizontalAlignment="Center" FontWeight="Bold"/>
+                            <TextBlock Text="Wed" HorizontalAlignment="Center" FontWeight="Bold"/>
+                            <TextBlock Text="Thu" HorizontalAlignment="Center" FontWeight="Bold"/>
+                            <TextBlock Text="Fri" HorizontalAlignment="Center" FontWeight="Bold"/>
+                            <TextBlock Text="Sat" HorizontalAlignment="Center" FontWeight="Bold"/>
+                            <TextBlock Text="Sun" HorizontalAlignment="Center" FontWeight="Bold"/>
+                        </UniformGrid>
+                        <ItemsControl ItemsSource="{Binding Days}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <UniformGrid Columns="7"/>
@@ -119,11 +132,10 @@
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
-
+                    </StackPanel>
                 </StackPanel>
             </ScrollViewer>
 
-            <!-- Event list -->
             <StackPanel Grid.Row="0" Grid.Column="1" Margin="10">
                 <TextBlock Text="Events on this day:" FontSize="18" FontWeight="Bold" Margin="0 0 0 10"/>
 
@@ -155,7 +167,7 @@
                         Margin="0 10 0 0"
                         Padding="5"/>
             </StackPanel>
-
+            
         </Grid>
     </DockPanel>
 </Window>

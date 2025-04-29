@@ -12,6 +12,12 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ToastNotifications;
+using ToastNotifications.Messages;
+using ToastNotifications.Position;
+using ToastNotifications.Lifetime;
+using Calendar.Scripts;
+
 
 namespace Calendar
 {
@@ -20,9 +26,20 @@ namespace Calendar
     /// </summary>
     public partial class MainWindow : Window
     {
+
         public MainWindow()
         {
+
             InitializeComponent();
+            this.Closed += MainWindow_Closed;
+        }
+
+        private void MainWindow_Closed(object sender, EventArgs e)
+        {
+            if (DataContext is MainViewModel viewModel)
+            {
+                viewModel.CleanUp();
+            }
         }
     }
 }

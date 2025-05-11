@@ -5,11 +5,173 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Calendar.Scripts"
         mc:Ignorable="d"
-        Title="MainWindow" Height="890" Width="950">
+        Title="Sports Calendar" Height="1012" Width="1020"
+        Background="{DynamicResource PrimaryBrush}">
 
     <Window.Resources>
+
+        <!-- Value converters -->
         <local:BoolToHighlightBrushConverter x:Key="BoolToHighlightBrushConverter"/>
         <local:TimeConverter x:Key="TimeConverter"/>
+
+        <!-- Button Style -->
+        <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Background" Value="{DynamicResource SecondaryBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="1"
+                                CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource ButtonHoverBrush}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- ListBox Style -->
+        <Style TargetType="ListBox">
+            <Setter Property="Background" Value="{DynamicResource PrimaryBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+        </Style>
+
+        <Style TargetType="ListBoxItem">
+            <Setter Property="Background" Value="{DynamicResource PrimaryBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource ButtonHoverBrush}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <ControlTemplate x:Key="ComboBoxToggleButtonTemplate" TargetType="ToggleButton">
+            <Grid>
+                <Border Background="{TemplateBinding Background}"
+        BorderBrush="{TemplateBinding BorderBrush}"
+        BorderThickness="0"
+        CornerRadius="6" />
+                <Path x:Name="Arrow" 
+      Data="M 0 0 L 4 4 L 8 0 Z"
+      Width="8"
+      Height="4"
+      Fill="{DynamicResource TextBrush}"
+      HorizontalAlignment="Center"
+      VerticalAlignment="Center"/>
+            </Grid>
+        </ControlTemplate>
+
+        <!-- ComboBox Style -->
+        <Style TargetType="ComboBox">
+            <Setter Property="Background" Value="{DynamicResource PrimaryBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Padding" Value="8,4" />
+            <Setter Property="Margin" Value="5" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Grid>
+                            <Border x:Name="Border"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="1"
+                            CornerRadius="6"
+                            Padding="8,4">
+                                <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center" />
+                            </Border>
+                            <ToggleButton x:Name="ToggleButton"
+                                  Template="{StaticResource ComboBoxToggleButtonTemplate}"
+                                  IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                  Focusable="False"
+                                  Background="Transparent"
+                                  BorderThickness="0"
+                                  HorizontalAlignment="Right"
+                                  VerticalAlignment="Center"
+                                  Width="20"
+                                  Height="20"
+                                  Margin="0,0,8,0"/>
+                            <Popup x:Name="PART_Popup"
+                           Placement="Bottom"
+                           IsOpen="{TemplateBinding IsDropDownOpen}"
+                           AllowsTransparency="True"
+                           Focusable="False"
+                           PopupAnimation="Slide">
+                                <Border Background="{DynamicResource PrimaryBrush}"
+                                BorderBrush="{DynamicResource AccentBrush}"
+                                BorderThickness="1"
+                                CornerRadius="6"
+                                Margin="0,4,0,0">
+                                    <ScrollViewer>
+                                        <StackPanel IsItemsHost="True" />
+                                    </ScrollViewer>
+                                </Border>
+                            </Popup>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="Border" Property="Background" Value="Gray" />
+                            </Trigger>
+                            <Trigger Property="IsDropDownOpen" Value="True">
+                                <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource AccentBrush}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- ComboBoxItem Style -->
+        <Style TargetType="ComboBoxItem">
+            <Setter Property="Background" Value="{DynamicResource PrimaryBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Padding" Value="6,3" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource ButtonHoverBrush}" />
+                </Trigger>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource SecondaryBrush}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- TextBlock Style -->
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+        </Style>
+
+        <!-- CheckBox Style -->
+        <Style TargetType="CheckBox">
+            <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+
+        <!-- Border Style -->
+        <Style TargetType="Border">
+            <Setter Property="Background" Value="{DynamicResource PrimaryBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+        </Style>
+
     </Window.Resources>
 
     <Window.DataContext>
@@ -17,157 +179,200 @@
     </Window.DataContext>
 
     <DockPanel>
-
-
-        <StackPanel DockPanel.Dock="Bottom" Margin="10">
-            <TextBlock Text="MLB Games on this day" FontSize="18" FontWeight="Bold" Margin="0,0,0,10"/>
+        <StackPanel DockPanel.Dock="Bottom" Margin="10" Background="{DynamicResource AccentBrush}">
+            <TextBlock Text="MLB Games on this day" 
+                       FontSize="18" 
+                       FontWeight="Bold" 
+                       Margin="10"
+                       HorizontalAlignment="Center"/>
 
             <ListBox ItemsSource="{Binding SelectedMLBGames}"
                      Margin="10"
                      BorderThickness="1"
-                     BorderBrush="Gray"
-                     Height="200">
+                     Height="200" SelectionChanged="ListBox_SelectionChanged">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Vertical" Margin="5">
-                            <TextBlock Text="{Binding HomeTeam}" FontWeight="Bold"/>
-                            <TextBlock Text="vs"/>
-                            <TextBlock Text="{Binding AwayTeam}" FontWeight="Bold"/>
-                            <TextBlock Text="{Binding GameTime}" FontStyle="Italic" Foreground="Gray"/>
+                            <TextBlock Text="{Binding HomeTeam}" FontWeight="Bold" HorizontalAlignment="Center"/>
+                            <TextBlock Text="vs" HorizontalAlignment="Center"/>
+                            <TextBlock Text="{Binding AwayTeam}" FontWeight="Bold" HorizontalAlignment="Center"/>
+                            <TextBlock Text="{Binding GameTime}" FontStyle="Italic" HorizontalAlignment="Center"/>
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
         </StackPanel>
 
-
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="3*"/>
                 <ColumnDefinition Width="2*"/>
             </Grid.ColumnDefinitions>
 
+            <!-- Calendar Section -->
             <ScrollViewer Grid.Row="0" Grid.Column="0" VerticalScrollBarVisibility="Auto" Margin="10">
                 <StackPanel>
-
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-
-                        <Button Grid.Column="0" Content="←" Command="{Binding PreviousMonthCommand}" Width="30" Height="30" Margin="5"/>
-                        <TextBlock Grid.Column="1"
-                                   Text="{Binding SelectedDate, StringFormat='MMMM yyyy'}"
-                                   FontSize="24" FontWeight="Bold"
-                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        <Button Grid.Column="2" Content="→" Command="{Binding NextMonthCommand}" Width="30" Height="30" Margin="5"/>
-                    </Grid>
-
-                    <StackPanel Orientation="Horizontal" Margin="0,10,0,10">
-                        <TextBlock Text="Filter by type:" VerticalAlignment="Center" Margin="0,0,10,0"/>
-                        <ComboBox Width="120"
-                                  ItemsSource="{Binding TagFilters}"
-                                  SelectedItem="{Binding SelectedTagFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <StackPanel Orientation="Horizontal" Margin="10" VerticalAlignment="Center">
-                            <CheckBox IsChecked="{Binding NotificationsEnabled}" 
-                                    Content="Enable Notifications"
-                                    Margin="89,0,10,0"/>
-                            <Button Command="{Binding CheckNowCommand}" 
-                                    Content="Check Now" 
-                                    Padding="10,2"/>
+                    <!-- Theme Selector -->
+                    <Border Background="{DynamicResource AccentBrush}" CornerRadius="5" Margin="0,10" Padding="10">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Text="Select MLB Theme:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                            <ComboBox Width="150"
+                                      ItemsSource="{Binding AvailableThemes}"
+                                      SelectedItem="{Binding SelectedTeamTheme, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                         </StackPanel>
-                    </StackPanel>
-                    <StackPanel>
-                        <!-- Day names header -->
-                        <UniformGrid Columns="7" Margin="2,0,2,5">
-                            <TextBlock Text="Mon" HorizontalAlignment="Center" FontWeight="Bold"/>
-                            <TextBlock Text="Tue" HorizontalAlignment="Center" FontWeight="Bold"/>
-                            <TextBlock Text="Wed" HorizontalAlignment="Center" FontWeight="Bold"/>
-                            <TextBlock Text="Thu" HorizontalAlignment="Center" FontWeight="Bold"/>
-                            <TextBlock Text="Fri" HorizontalAlignment="Center" FontWeight="Bold"/>
-                            <TextBlock Text="Sat" HorizontalAlignment="Center" FontWeight="Bold"/>
-                            <TextBlock Text="Sun" HorizontalAlignment="Center" FontWeight="Bold"/>
-                        </UniformGrid>
-                        <ItemsControl ItemsSource="{Binding Days}">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <UniformGrid Columns="7"/>
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
+                    </Border>
+
+                    <!-- Month Navigation -->
+                    <Border Background="{DynamicResource AccentBrush}" CornerRadius="5" Margin="0,0,0,10" Padding="10">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Button Grid.Column="0" Content="←" Command="{Binding PreviousMonthCommand}" 
+                                    Width="30" Height="30" FontWeight="Bold"/>
+                            <TextBlock Grid.Column="1"
+                                       Text="{Binding SelectedDate, StringFormat='MMMM yyyy'}"
+                                       FontSize="24" FontWeight="Bold"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <Button Grid.Column="2" Content="→" Command="{Binding NextMonthCommand}" 
+                                    Width="30" Height="30" FontWeight="Bold"/>
+                        </Grid>
+                    </Border>
+
+                    <Border Background="{DynamicResource AccentBrush}" CornerRadius="5" Margin="0,0,0,10" Padding="10">
+                        <StackPanel Orientation="Horizontal" Margin="0,10,0,10">
+                            <TextBlock Text="Filter by type:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                            <ComboBox Width="120"
+                                      ItemsSource="{Binding TagFilters}"
+                                      SelectedItem="{Binding SelectedTagFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            <StackPanel Orientation="Horizontal" Margin="10" VerticalAlignment="Center">
+                                <CheckBox IsChecked="{Binding NotificationsEnabled}" 
+                                          Content="Enable Notifications"
+                                          Margin="89,0,10,0"/>
+                                <Button Command="{Binding CheckNowCommand}" 
+                                        Content="Check Now" 
+                                        Padding="10,2"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Calendar Days -->
+                    <Border Background="{DynamicResource AccentBrush}" CornerRadius="5" Padding="10">
+                        <StackPanel>
+                            
+                            <ItemsControl ItemsSource="{Binding Days}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <UniformGrid Columns="7"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border BorderBrush="{DynamicResource AccentBrush}" 
+                                                BorderThickness="1" 
+                                                Padding="4" 
+                                                Margin="2" 
+                                                MinHeight="80"
+                                                CornerRadius="3"
+                                                 Background="{Binding IsSelected, Converter={StaticResource BoolToHighlightBrushConverter}}">
+                                            <Button Content="{Binding Date.Day}"
+                                                    Command="{Binding DataContext.ChangeSelectedDateCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                    CommandParameter="{Binding Date}"
+                                                    Background="Transparent"
+                                                    BorderThickness="0"
+                                                    HorizontalAlignment="Stretch"
+                                                    VerticalAlignment="Stretch">
+                                                <Button.Template>
+                                                    <ControlTemplate TargetType="Button">
+                                                        <Grid Background="Transparent">
+                                                            <StackPanel>
+                                                                <TextBlock Text="{Binding Date.Day}" 
+                                                                           FontWeight="Bold" 
+                                                                           HorizontalAlignment="Center" />
+                                                                <ItemsControl ItemsSource="{Binding Events}">
+                                                                    <ItemsControl.ItemTemplate>
+                                                                        <DataTemplate>
+                                                                            <TextBlock Text="{Binding Title}" 
+                                                                                       FontSize="10" 
+                                                                                       TextWrapping="Wrap"
+                                                                                       HorizontalAlignment="Center"/>
+                                                                        </DataTemplate>
+                                                                    </ItemsControl.ItemTemplate>
+                                                                </ItemsControl>
+                                                            </StackPanel>
+                                                        </Grid>
+                                                    </ControlTemplate>
+                                                </Button.Template>
+                                            </Button>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- Events Section -->
+            <Border Grid.Row="0" Grid.Column="1" 
+                    Margin="10" 
+                    Background="{DynamicResource AccentBrush}"
+                    CornerRadius="5"
+                    Padding="10">
+                <StackPanel>
+                    <TextBlock Text="Events on this day:" 
+                               FontSize="18" 
+                               FontWeight="Bold" 
+                               Margin="0 0 0 10"
+                               HorizontalAlignment="Center"/>
+
+                    <ItemsControl ItemsSource="{Binding SelectedDay.Events}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Border BorderBrush="LightGray" BorderThickness="1" Padding="4" Margin="2" MinHeight="80"
-                                        Background="{Binding IsSelected, Converter={StaticResource BoolToHighlightBrushConverter}}">
-                                    <Button Content="{Binding Date.Day}"
-                                            Command="{Binding DataContext.ChangeSelectedDateCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                                            CommandParameter="{Binding Date}"
-                                            Background="Transparent"
-                                            BorderThickness="0"
-                                            HorizontalAlignment="Stretch"
-                                            VerticalAlignment="Stretch">
-                                        <Button.Template>
-                                            <ControlTemplate TargetType="Button">
-                                                <Grid Background="Transparent">
-                                                    <StackPanel>
-                                                        <TextBlock Text="{Binding Date.Day}" FontWeight="Bold" HorizontalAlignment="Center" />
-                                                        <ItemsControl ItemsSource="{Binding Events}">
-                                                            <ItemsControl.ItemTemplate>
-                                                                <DataTemplate>
-                                                                    <TextBlock Text="{Binding Title}" FontSize="10" TextWrapping="Wrap"/>
-                                                                </DataTemplate>
-                                                            </ItemsControl.ItemTemplate>
-                                                        </ItemsControl>
-                                                    </StackPanel>
-                                                </Grid>
-                                            </ControlTemplate>
-                                        </Button.Template>
-                                    </Button>
+                                <Border BorderBrush="{DynamicResource AccentBrush}" 
+                    BorderThickness="1" 
+                    Padding="5" 
+                    Margin="5"
+                    CornerRadius="3">
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding Title}" 
+                               FontWeight="Bold" 
+                               HorizontalAlignment="Center"
+                               Foreground="{DynamicResource TextBrush}"/>
+                                        <TextBlock Text="{Binding Time, Converter={StaticResource TimeConverter}}" 
+                               FontStyle="Italic" 
+                               HorizontalAlignment="Center"
+                               Foreground="{DynamicResource TextBrush}"/>
+                                        <TextBlock Text="{Binding Tag}" 
+                               HorizontalAlignment="Center"
+                               Foreground="{DynamicResource TextBrush}"/>
+
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                            <Button Content="Modify"
+                                Command="{Binding DataContext.ModifyEventCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                CommandParameter="{Binding}"/>
+                                            <Button Content="Delete"
+                                Command="{Binding DataContext.DeleteEventCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                CommandParameter="{Binding}"/>
+                                        </StackPanel>
+                                    </StackPanel>
                                 </Border>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
-                    </StackPanel>
+
+                    <Button Content="Add Event"
+                            Command="{Binding AddEventCommand}"
+                            Margin="0 10 0 0"
+                            HorizontalAlignment="Stretch"/>
                 </StackPanel>
-            </ScrollViewer>
-
-            <StackPanel Grid.Row="0" Grid.Column="1" Margin="10">
-                <TextBlock Text="Events on this day:" FontSize="18" FontWeight="Bold" Margin="0 0 0 10"/>
-
-                <ItemsControl ItemsSource="{Binding SelectedDay.Events}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Border BorderBrush="Gray" BorderThickness="1" Padding="5" Margin="5">
-                                <StackPanel>
-                                    <TextBlock Text="{Binding Title}" FontWeight="Bold"/>
-                                    <TextBlock Text="{Binding Time, Converter={StaticResource TimeConverter}}" FontStyle="Italic"/>
-                                    <TextBlock Text="{Binding Tag}"/>
-
-                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                        <Button Content="Modify"
-                                                Command="{Binding DataContext.ModifyEventCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                CommandParameter="{Binding}" Margin="5"/>
-                                        <Button Content="Delete"
-                                                Command="{Binding DataContext.DeleteEventCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                CommandParameter="{Binding}" Margin="5"/>
-                                    </StackPanel>
-                                </StackPanel>
-                            </Border>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-
-                <Button Content="Add Event"
-                        Command="{Binding AddEventCommand}"
-                        Margin="0 10 0 0"
-                        Padding="5"/>
-            </StackPanel>
-            
+            </Border>
         </Grid>
     </DockPanel>
 </Window>

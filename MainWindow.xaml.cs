@@ -41,5 +41,10 @@ namespace Calendar
                 viewModel.CleanUp();
             }
         }
+
+        private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
     }
 }

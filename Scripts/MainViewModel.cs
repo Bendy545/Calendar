@@ -23,12 +23,13 @@ namespace Calendar.Scripts
         private readonly IEventRepository _repository;
         private readonly MLBApiService _mlbApiService;
 
-        private ObservableCollection<FootballEvent> _allEvents = new ObservableCollection<FootballEvent>();
         private DateTime _selectedDate = DateTime.Today;
         private string _selectedTagFilter = "All";
+        private string _selectedTeamTheme;
+
         private DayViewModel _selectedDay;
 
-        private DispatcherTimer _notificationTimer;
+        private readonly DispatcherTimer _notificationTimer;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -38,8 +39,28 @@ namespace Calendar.Scripts
 
         public List<string> TagFilters { get; } = new List<string> { "All", "Match", "Training" };
         public ObservableCollection<MLBGame> SelectedMLBGames { get; private set; } = new ObservableCollection<MLBGame>();
-        private Dictionary<int, bool> _notifiedEvents = new Dictionary<int, bool>();
+        private readonly Dictionary<int, bool> _notifiedEvents = new Dictionary<int, bool>();
+        public ObservableCollection<string> AvailableThemes { get; } = new ObservableCollection<string>
+        {
+            "RedSox",
+            "Default",
+            "Yankees"
+        };
 
+        public string SelectedTeamTheme
+        {
+            get => _selectedTeamTheme;
+            set
+            {
+                if (SetProperty(ref _selectedTeamTheme, value))
+                {
+                    ChangeTeamTheme(value);
+
+                    Properties.Settings.Default.SelectedTeamTheme = value;
+                    Properties.Settings.Default.Save();
+                }
+            }
+        }
         public bool NotificationsEnabled
         {
             get => _notificationsEnabled;
@@ -48,6 +69,9 @@ namespace Calendar.Scripts
                 if (SetProperty(ref _notificationsEnabled, value))
                 {
                     if (value) CheckForUpcomingEvents(null, EventArgs.Empty);
+
+                    Properties.Settings.Default.NotificationsEnabled = value;
+                    Properties.Settings.Default.Save();
                 }
             }
         }
@@ -114,17 +138,7 @@ namespace Calendar.Scripts
             _mlbApiService = new MLBApiService();
             Days = new ObservableCollection<DayViewModel>();
             SelectedMLBGames = new ObservableCollection<MLBGame>();
-
-            AddEventCommand = new RelayCommand(AddEvent);
-            ChangeSelectedDateCommand = new RelayCommand(param => ChangeSelectedDate((DateTime)param));
-            PreviousMonthCommand = new RelayCommand(() => SelectedDate = SelectedDate.AddMonths(-1));
-            NextMonthCommand = new RelayCommand(() => SelectedDate = SelectedDate.AddMonths(1));
-            ModifyEventCommand = new RelayCommand(ModifyEvent);
-            DeleteEventCommand = new RelayCommand(DeleteEvent);
-            CheckNowCommand = new RelayCommand(() =>
-            {
-                CheckForUpcomingEvents(null, EventArgs.Empty);
-            });
+            SetupCommands();
             GenerateMonthDays();
             LoadMLBGamesForSelectedDate();
 
@@ -139,6 +153,10 @@ namespace Calendar.Scripts
             _notificationTimer.Start();
 
             CheckForUpcomingEvents(null, EventArgs.Empty);
+
+            SelectedTeamTheme = Properties.Settings.Default.SelectedTeamTheme ?? "Default";
+            NotificationsEnabled = Properties.Settings.Default.NotificationsEnabled;
+            ChangeTeamTheme(SelectedTeamTheme);
 
         }
 
@@ -301,6 +319,31 @@ namespace Calendar.Scripts
             _notificationTimer.Stop();
         }
 
+        public void ChangeTeamTheme(string teamName)
+        {
+            try
+            {
+                var themeDict = new ResourceDictionary
+                {
+                    Source = new Uri($"pack://application:,,,/Calendar;component/TeamThemes/{teamName}.xaml")
+                };
+
+                var app = Application.Current;
+                var existingTheme = app.Resources.MergedDictionaries
+                    .FirstOrDefault(d => d.Source != null && d.Source.OriginalString.Contains("TeamThemes/"));
+
+                if (existingTheme != null)
+                {
+                    app.Resources.MergedDictionaries.Remove(existingTheme);
+                }
+
+                app.Resources.MergedDictionaries.Add(themeDict);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Failed to load team theme: {ex.Message}");
+            }
+        }
 
         protected bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
         {
@@ -312,11 +355,19 @@ namespace Calendar.Scripts
 
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            var handler = PropertyChanged;
-            if (handler != null)
-                handler(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        private void SetupCommands()
+        {
+            AddEventCommand = new RelayCommand(AddEvent);
+            ChangeSelectedDateCommand = new RelayCommand(param => ChangeSelectedDate((DateTime)param));
+            PreviousMonthCommand = new RelayCommand(() => SelectedDate = SelectedDate.AddMonths(-1));
+            NextMonthCommand = new RelayCommand(() => SelectedDate = SelectedDate.AddMonths(1));
+            ModifyEventCommand = new RelayCommand(ModifyEvent);
+            DeleteEventCommand = new RelayCommand(DeleteEvent);
+            CheckNowCommand = new RelayCommand(() => CheckForUpcomingEvents(null, EventArgs.Empty));
+        }
     }
 
 }

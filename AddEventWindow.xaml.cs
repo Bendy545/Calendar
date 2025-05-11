@@ -19,7 +19,7 @@ namespace Calendar
 
     public partial class AddEventWindow : Window
     {
-        private FootballEvent _editingEvent;
+        private readonly FootballEvent _editingEvent;
 
         public string TitleText => TitleBox.Text;
         public string TimeText => TimeBox.Text;
@@ -85,6 +85,11 @@ namespace Calendar
         {
             string pattern = @"^([0-1][0-9]|2[0-3]):([0-5][0-9])$";
             return Regex.IsMatch(time, pattern);
+        }
+
+        private void Cancel_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
         }
     }
 }

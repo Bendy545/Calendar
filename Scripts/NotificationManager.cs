@@ -16,6 +16,12 @@ namespace Calendar.Scripts
 
         public static void ShowNotification(string message)
         {
+
+            if (!Properties.Settings.Default.NotificationsEnabled)
+            {
+                return;
+            }
+
             Application.Current.Dispatcher.Invoke(() =>
             {
                 var notification = new NotificationWindow(message);

@@ -106,16 +106,24 @@
     <Compile Include="Scripts\API\MLBTeam.cs" />
     <Compile Include="Scripts\API\MLBTeamName.cs" />
     <Compile Include="Scripts\API\MLBTeams.cs" />
+    <Compile Include="Scripts\Commands\AddEventCommand.cs" />
+    <Compile Include="Scripts\Commands\ChangeSelectedDateCommand.cs" />
+    <Compile Include="Scripts\Commands\DeleteEventCommand.cs" />
+    <Compile Include="Scripts\Commands\ModifyEventCommand.cs" />
+    <Compile Include="Scripts\Commands\NextMonthCommand.cs" />
+    <Compile Include="Scripts\Commands\PreviousMonthCommand.cs" />
     <Compile Include="Scripts\Convertors\BoolToHighlightBrushConverter.cs" />
     <Compile Include="Scripts\Convertors\BoolToVisibilityConverter.cs" />
     <Compile Include="Scripts\DayViewModel.cs" />
-    <Compile Include="Scripts\EventRepository.cs" />
-    <Compile Include="Scripts\FootballEvent.cs" />
-    <Compile Include="Scripts\IEventRepository.cs" />
+    <Compile Include="Scripts\EventNotificationService.cs" />
+    <Compile Include="Scripts\Database\EventRepository.cs" />
+    <Compile Include="Scripts\Database\FootballEvent.cs" />
+    <Compile Include="Scripts\Database\IEventRepository.cs" />
     <Compile Include="Scripts\MainViewModel.cs" />
     <Compile Include="Scripts\NotificationManager.cs" />
     <Compile Include="Scripts\RelayCommand.cs" />
     <Compile Include="Scripts\Convertors\TimeConverter.cs" />
+    <Compile Include="Scripts\ThemeService.cs" />
     <Page Include="AddEventWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

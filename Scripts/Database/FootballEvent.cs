@@ -13,5 +13,7 @@ namespace Calendar.Scripts
         public string Title { get; set; }
         public string Tag { get; set; }
         public TimeSpan Time { get; set; }
+
+
     }
 }

@@ -59,7 +59,19 @@ namespace Calendar
 
         private void Add_Click(object sender, RoutedEventArgs e)
         {
-            
+
+            if (string.IsNullOrWhiteSpace(TitleText))
+            {
+                MessageBox.Show("Please enter a title for the event.");
+                return;
+            }
+
+            if (TagComboBox.SelectedItem == null)
+            {
+                MessageBox.Show("Please select a tag.");
+                return;
+            }
+
             if (!IsValidTime(TimeBox.Text))
             {
                 MessageBox.Show("Please enter a valid time in HH:mm format.");

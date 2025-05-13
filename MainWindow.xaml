@@ -221,7 +221,8 @@
                             <TextBlock Text="Select MLB Theme:" VerticalAlignment="Center" Margin="0,0,10,0"/>
                             <ComboBox Width="150"
                                       ItemsSource="{Binding AvailableThemes}"
-                                      SelectedItem="{Binding SelectedTeamTheme, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                      SelectedItem="{Binding SelectedTeamTheme, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                      />
                         </StackPanel>
                     </Border>
 
@@ -255,9 +256,6 @@
                                 <CheckBox IsChecked="{Binding NotificationsEnabled}" 
                                           Content="Enable Notifications"
                                           Margin="89,0,10,0"/>
-                                <Button Command="{Binding CheckNowCommand}" 
-                                        Content="Check Now" 
-                                        Padding="10,2"/>
                             </StackPanel>
                         </StackPanel>
                     </Border>

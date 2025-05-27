@@ -45,9 +45,11 @@ namespace Calendar.Scripts
 
         public ObservableCollection<string> AvailableThemes { get; } = new ObservableCollection<string>
         {
-            "RedSox",
             "Default",
-            "Yankees"
+            "RedSox",
+            "Yankees",
+            "Padres",
+            "Rockies"
         };
 
         public string SelectedTeamTheme

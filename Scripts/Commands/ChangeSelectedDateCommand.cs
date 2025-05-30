@@ -14,8 +14,18 @@ namespace Calendar.Commands
             _viewModel = viewModel;
         }
 
+        /// <summary>
+        /// Determines whether the command can execute in its current state.
+        /// </summary>
+        /// <param name="parameter">Data used by the command.</param>
+        /// <returns>true if parameter is a DateTime.</returns>
         public bool CanExecute(object parameter) => parameter is DateTime;
 
+        /// <summary>
+        /// Executes the command.
+        /// Updates the SelectedDate, re-highlights the selected day.
+        /// </summary>
+        /// <param name="parameter">The new date to select.</param>
         public void Execute(object parameter)
         {
             if (parameter is DateTime date)

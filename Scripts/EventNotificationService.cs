@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace Calendar.Scripts
 {
+
+    /// <summary>
+    /// Service responsible for checking upcoming events and triggering notifications.
+    /// </summary>
     public class EventNotificationService
     {
         private readonly IEventRepository _repository;
@@ -18,6 +22,10 @@ namespace Calendar.Scripts
             _repository = repository;
         }
 
+        /// <summary>
+        /// Checks for upcoming events within a 30-minute threshold and triggers notifications.
+        /// It checks events for the current day and the start of the next day.
+        /// </summary>
         public void CheckUpcomingEvents()
         {
             var now = DateTime.Now;

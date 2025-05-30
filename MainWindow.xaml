@@ -10,7 +10,7 @@
 
     <Window.Resources>
 
-        <!-- Value converters -->
+        <!--Value converters -->
         <local:BoolToHighlightBrushConverter x:Key="BoolToHighlightBrushConverter"/>
         <local:TimeConverter x:Key="TimeConverter"/>
 

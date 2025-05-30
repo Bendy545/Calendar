@@ -113,7 +113,6 @@
     <Compile Include="Scripts\Commands\NextMonthCommand.cs" />
     <Compile Include="Scripts\Commands\PreviousMonthCommand.cs" />
     <Compile Include="Scripts\Convertors\BoolToHighlightBrushConverter.cs" />
-    <Compile Include="Scripts\Convertors\BoolToVisibilityConverter.cs" />
     <Compile Include="Scripts\DayViewModel.cs" />
     <Compile Include="Scripts\EventNotificationService.cs" />
     <Compile Include="Scripts\Database\EventRepository.cs" />

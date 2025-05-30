@@ -57,6 +57,10 @@ namespace Calendar
             }
         }
 
+        /// <summary>
+        /// Handles the Click event of the Add/Save button.
+        /// Validates input, creates/updates the ResultEvent, and closes the dialog with a positive result.
+        /// </summary>
         private void Add_Click(object sender, RoutedEventArgs e)
         {
 
@@ -93,12 +97,21 @@ namespace Calendar
             Close();
         }
 
+        /// <summary>
+        /// Validates if the provided string is a valid time in HH:mm format.
+        /// </summary>
+        /// <param name="time">The time string to validate.</param>
+        /// <returns>True if the time string is valid.</returns>
         private bool IsValidTime(string time)
         {
             string pattern = @"^([0-1][0-9]|2[0-3]):([0-5][0-9])$";
             return Regex.IsMatch(time, pattern);
         }
 
+        /// <summary>
+        /// Handles the Click event of the Cancel button.
+        /// Closes the dialog without saving changes.
+        /// </summary>
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
             this.Close();

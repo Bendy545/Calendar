@@ -8,6 +8,10 @@ namespace Calendar.Scripts
     public class EventRepository : IEventRepository
     {
         private static readonly Lazy<EventRepository> _instance = new Lazy<EventRepository>(() => new EventRepository());
+
+        /// <summary>
+        /// Gets the Singleton instance of the EventRepository.
+        /// </summary>
         public static EventRepository Instance => _instance.Value;
 
         private readonly string _connectionString = "Data Source=events.db";
@@ -17,6 +21,9 @@ namespace Calendar.Scripts
             CreateEventsTableIfNotExists();
         }
 
+        /// <summary>
+        /// Creates the "Events" table in the database if it does not already exist.
+        /// </summary>
         private void CreateEventsTableIfNotExists()
         {
             using (var connection = new SQLiteConnection(_connectionString))
@@ -29,6 +36,11 @@ namespace Calendar.Scripts
             }
         }
 
+        /// <summary>
+        /// Retrieves all football events for a specific date.
+        /// </summary>
+        /// <param name="date">The date for which to retrieve events.</param>
+        /// <returns>A list of FootballEvent objects for the given date.</returns>
         public List<FootballEvent> GetEvents(DateTime date)
         {
             var events = new List<FootballEvent>();
@@ -58,6 +70,10 @@ namespace Calendar.Scripts
             return events;
         }
 
+        /// <summary>
+        /// Adds a new football event to the database.
+        /// </summary>
+        /// <param name="footballEvent">The FootballEvent to add.</param>
         public void AddEvent(FootballEvent footballEvent)
         {
             using (var connection = new SQLiteConnection(_connectionString))
@@ -72,6 +88,10 @@ namespace Calendar.Scripts
             }
         }
 
+        /// <summary>
+        /// Updates an existing football event in the database.
+        /// </summary>
+        /// <param name="footballEvent">The FootballEvent with updated info. The ID is used to find the event.</param>
         public void UpdateEvent(FootballEvent footballEvent)
         {
             using (var connection = new SQLiteConnection(_connectionString))
@@ -86,6 +106,10 @@ namespace Calendar.Scripts
             }
         }
 
+        /// <summary>
+        /// Deletes a football event from the database.
+        /// </summary>
+        /// <param name="footballEvent">The FootballEvent to delete. The ID is used to find the event.</param>
         public void DeleteEvent(FootballEvent footballEvent)
         {
             using (var connection = new SQLiteConnection(_connectionString))

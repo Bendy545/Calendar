@@ -34,6 +34,12 @@ namespace Calendar
             this.Closed += MainWindow_Closed;
         }
 
+        /// <summary>
+        /// Handles the Closed event of the MainWindow.
+        /// Performs cleanup operations, particularly for the ViewModel.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">An <see cref="EventArgs"/> that contains no event data.</param>
         private void MainWindow_Closed(object sender, EventArgs e)
         {
             if (DataContext is MainViewModel viewModel)
@@ -42,6 +48,7 @@ namespace Calendar
             }
         }
 
+        
         private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 

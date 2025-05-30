@@ -7,6 +7,11 @@ using System.Windows;
 
 namespace Calendar.Scripts
 {
+
+    /// <summary>
+    /// Manages the display and positioning of multiple NotificationWindow instances.
+    /// Ensures notifications are stacked neatly in the work area.
+    /// </summary>
     public static class NotificationManager
     {
         private static List<NotificationWindow> _activeNotifications = new List<NotificationWindow>();
@@ -14,6 +19,11 @@ namespace Calendar.Scripts
         private const double NotificationHeight = 120;
         private const double MarginBetween = 10;
 
+        /// <summary>
+        /// Shows a notification window with the given message, if notifications are enabled.
+        /// Manages the position and lifecycle of the notification window.
+        /// </summary>
+        /// <param name="message">The message to display in the notification.</param>
         public static void ShowNotification(string message)
         {
 
@@ -37,6 +47,10 @@ namespace Calendar.Scripts
             });
         }
 
+        /// <summary>
+        /// Updates the screen positions of all active notifications.
+        /// Notifications are stacked vertically from the bottom-right of the primary work area.
+        /// </summary>
         private static void UpdatePositions()
         {
             double currentOffset = 0;

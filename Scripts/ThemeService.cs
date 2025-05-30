@@ -10,6 +10,13 @@ namespace Calendar.Scripts
 {
     public class ThemeService
     {
+
+        /// <summary>
+        /// Applies a theme to the application by loading and merging a ResourceDictionary.
+        /// Themes are expected to be XAML files located in the "TeamThemes" folder.
+        /// </summary>
+        /// <param name="themeName">The name of the theme to apply (e.g., "RedSox", "Default"). 
+        /// This should correspond to a XAML file name in the TeamThemes folder.</param>
         public void ApplyTheme(string themeName)
         {
             try

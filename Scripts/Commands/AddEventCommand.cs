@@ -14,8 +14,18 @@ namespace Calendar.Commands
             _viewModel = viewModel;
         }
 
+        /// <summary>
+        /// Determines whether the command can execute in its current state.
+        /// </summary>
+        /// <param name="parameter">Data used by the command</param>
+        /// <returns>true if the command can be executed.</returns>
         public bool CanExecute(object parameter) => true;
 
+        /// <summary>
+        /// Executes the command.
+        /// Opens the AddEventWindow to gather event details.
+        /// </summary>
+        /// <param name="parameter">This parameter is not used</param>
         public void Execute(object parameter)
         {
             var window = new AddEventWindow();

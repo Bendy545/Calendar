@@ -33,6 +33,10 @@ namespace Calendar
         public static readonly DependencyProperty NotificationMessageProperty =
            DependencyProperty.Register("NotificationMessage", typeof(string), typeof(NotificationWindow));
 
+        /// <summary>
+        /// Initializes a new instance of the NotificationWindow class.
+        /// </summary>
+        /// <param name="message">The message to be displayed in the notification.</param>
         public NotificationWindow(string message)
         {
             InitializeComponent();
@@ -52,11 +56,19 @@ namespace Calendar
             timer.Start();
         }
 
+        /// <summary>
+        /// Handles the Click event of the Close button.
+        /// Stops the auto-close timer and closes the notification.
+        /// </summary>
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
             CloseNotification();
         }
 
+        /// <summary>
+        /// Closes the notification window.
+        /// This method ensures any specific cleanup related to closing can be centralized if needed.
+        /// </summary>
         private void CloseNotification()
         {
             _verticalOffset -= NotificationHeight + MarginBetween;

@@ -37,7 +37,7 @@ namespace Calendar.Scripts
         public event PropertyChangedEventHandler PropertyChanged;
 
         public ObservableCollection<DayViewModel> Days { get; private set; }
-        public ObservableCollection<FootballEvent> FilteredEvents { get; private set; }
+        //public ObservableCollection<FootballEvent> FilteredEvents { get; private set; }
         private ObservableCollection<MLBGame> _mlbGames;
 
         public List<string> TagFilters { get; } = new List<string> { "All", "Match", "Training" };
@@ -166,6 +166,9 @@ namespace Calendar.Scripts
             _themeService.ApplyTheme(SelectedTeamTheme);
         }
 
+        /// <summary>
+        /// Initializes all ICommand properties.
+        /// </summary>
         private void SetupCommands()
         {
             AddEventCommand = new AddEventCommand(this);
@@ -176,6 +179,10 @@ namespace Calendar.Scripts
             DeleteEventCommand = new DeleteEventCommand(this);
         }
 
+        /// <summary>
+        /// Asynchronously loads MLB games for the currently SelectedDate.
+        /// and populates the SelectedMLBGames collection.
+        /// </summary>
         public async void LoadMLBGamesForSelectedDate()
         {
             SelectedMLBGames.Clear();
@@ -184,8 +191,11 @@ namespace Calendar.Scripts
                 SelectedMLBGames.Add(game);
         }
 
-        
-
+        /// <summary>
+        /// Generates the DayViewModelobjects for the month of the SelectedDate.
+        /// Populates the Days collection and applies any active tag filters.
+        /// Sets the SelectedDay based on SelectedDate.
+        /// </summary>
         public void GenerateMonthDays()
         {
             Days.Clear();
@@ -219,6 +229,14 @@ namespace Calendar.Scripts
 
         public void CleanUp() => _notificationTimer.Stop();
 
+        /// <summary>
+        /// Helper method for setting a property value and raising the PropertyChanged event.
+        /// </summary>
+        /// <typeparam name="T">The type of the property</typeparam>
+        /// <param name="storage">Reference to the backing field of the property.</param>
+        /// <param name="value">The new value for the property.</param>
+        /// <param name="propertyName">The name of the property. Automatically determined by the compiler.</param>
+        /// <returns>True if the value was changed.</returns>
         protected bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
         {
             if (EqualityComparer<T>.Default.Equals(storage, value)) return false;
@@ -227,6 +245,10 @@ namespace Calendar.Scripts
             return true;
         }
 
+        /// <summary>
+        /// Raises the PropertyChnaged event.
+        /// </summary>
+        /// <param name="propertyName">The name of the property that changed. Automatically determined if called from a property setter.</param>
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

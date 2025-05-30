@@ -38,17 +38,36 @@ namespace Calendar.Scripts.API
 
                 List<MLBGame> games = new List<MLBGame>();
 
-                foreach (var date in mlbData.Dates)
+                if (mlbData?.Dates != null)
                 {
-                    foreach (var game in date.Games)
+                    foreach (var dateEntry in mlbData.Dates) 
                     {
-                        games.Add(new MLBGame
+                        if (dateEntry.Games != null)
                         {
-                            Date = game.GameDate,
-                            AwayTeam = game.Teams.Away.Team.Name,
-                            HomeTeam = game.Teams.Home.Team.Name,
-                            GameTime = game.GameDate.ToLocalTime().ToString("hh:mm tt")
-                        });
+                            foreach (var gameDetail in dateEntry.Games) 
+                            {
+                                
+                                DateTime localGameDateTime = gameDetail.GameDate.ToLocalTime();
+
+                                string gameTimeDisplay = localGameDateTime.ToString("HH:mm");
+
+                                bool isOnNextLocalDay = localGameDateTime.Date > startDate.Date;
+
+                                string finalGameTimeDisplay = gameTimeDisplay;
+                                if (isOnNextLocalDay)
+                                {
+                                    finalGameTimeDisplay += " (Next Day)";
+                                }
+
+                                games.Add(new MLBGame
+                                {
+                                    Date = gameDetail.GameDate,
+                                    AwayTeam = gameDetail.Teams?.Away?.Team?.Name ?? "N/A",
+                                    HomeTeam = gameDetail.Teams?.Home?.Team?.Name ?? "N/A",
+                                    GameTime = finalGameTimeDisplay 
+                                });
+                            }
+                        }
                     }
                 }
 

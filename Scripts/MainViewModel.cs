@@ -37,7 +37,7 @@ namespace Calendar.Scripts
         public event PropertyChangedEventHandler PropertyChanged;
 
         public ObservableCollection<DayViewModel> Days { get; private set; }
-        //public ObservableCollection<FootballEvent> FilteredEvents { get; private set; }
+
         private ObservableCollection<MLBGame> _mlbGames;
 
         public List<string> TagFilters { get; } = new List<string> { "All", "Match", "Training" };
